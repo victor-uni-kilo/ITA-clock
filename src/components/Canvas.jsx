@@ -1,82 +1,82 @@
 import React, { Component } from "react";
 import styles from './Canvas.module.scss';
+import drawing from "../drawing/mainDraw";
+import dynamicDrawing from "../drawing/dynamicDraw";
 
 class Canvas extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      month: null,
-      day: null,
-      hours: null,
-      minutes: null,
-      seconds: null
-    };
-    this.canvasRef = React.createRef();
-    this.contextRef = React.createRef();
-    
+      date: new Date(),
+      // date: this.state.dateObj.getDate(),
+      // day: this.weekday[this.state.dateObj.getDay()],
+      // month: this.state.getMonth();
+    }
+    this.staticCanvasRef = React.createRef();
+    this.dynamicCanvasRef = React.createRef();
+    // this.contextRef = React.createRef();
+    // this.contextRef = React.createRef();
   }
-  // CLASS METHODS
-  // setClock () {
-  //   const currentDate = new Date();
-  //   let seconds = currentDate.getSeconds();
 
-  //   console.log('bambula')
+  setClock () {
+    const currentDate = new Date();
+  
+    function Clock() 
+    {
+      this.secondRatio = currentDate.getSeconds() / 60;
+      this.minuteRatio = (this.secondRatio + currentDate.getMinutes()) / 60;
+      this.hourRatio = (this.minuteRatio + currentDate.getHours()) / 12;
+    }
 
-  //   this.setState({
-  //     month: 'bambula',
-  //     day: null,
-  //     hours: null,
-  //     minutes: (currentDate.getSeconds() + currentDate.getMinutes()) / 60,
-  //     seconds: seconds
-  //   });
+    return new Clock();
+  }
+
+  // setDate = () => {
+  //   const now = new Date();
+  //   const splitDate = now.toString().split(" ");
+  //   let currentDate = {
+  //     dayOfWeek: splitDate[0].toUpperCase,
+  //     month:  splitDate[1].toUpperCase,
+  //     day: splitDate[2],
+  //   }
+  //   return currentDate
   // }
-
-  draw () {
-    console.log("Hello from Draw");
-  }
 
   // LIFECYCLE
 
   componentDidMount () {
-    this.setClock();
-    this.setState({
-      month: 'bambula',
-      day: null,
-      hours: null,
- 
-    });
-    console.log("STATE", this.state);
+    // console.log('COMPONENT DID MOUNT')
 
+    const staticCanvas = this.staticCanvasRef.current;
+    const dynamicCanvas = this.dynamicCanvasRef.current;
 
-    const canvas = this.canvasRef.current;
-    const canvasFrame = canvas.getBoundingClientRect();
-    canvas.width = canvasFrame.width;
-    canvas.height = canvasFrame.height;
-    console.log("Hello canvas width", canvas.width);
-    console.log("Hello canvas height", canvas.height);
+    let staticCanvasProps = drawing(staticCanvas);
 
-    const ctx = canvas.getContext('2d');
-    ctx.scale(2,2);
-    ctx.lineCap = 'round';
-
-    // CRTEATE MODULE SYSTEM AND FUNCTIONS INSIDE THEM
-    ctx.beginPath();
-    ctx.rect(30,30,30,30);
-    ctx.stroke();
-
-    this.contextRef.current = ctx;
-  }
-
-
-  render () {
+    setInterval(() => {
+      console.log(this.setClock());
+      dynamicDrawing(dynamicCanvas, this.setClock(), staticCanvasProps);
+    }, 1000);
+    
+  };
+  
+  // shouldComponentUpdate (prevProps, prevState) {
+    //   USE THIS TO UPDATE CLOCK ONLY EACH DAY
+    // };
+    
+    
+    render () {
     return (
       <div className={styles.canvasWrapper}>
         <canvas 
           className={styles.canvas}
-          ref={this.canvasRef}
+          ref={this.staticCanvasRef}
         >
           Your browser does not support HTML canvas.
+        </canvas>
+        <canvas 
+          className={styles.canvas}
+          ref={this.dynamicCanvasRef}
+        >
         </canvas>
       </div>
     )
