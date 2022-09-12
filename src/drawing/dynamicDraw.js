@@ -1,7 +1,4 @@
-// import Circle from './definitions';
-import radialDraw, {drawTicks, drawNumbers} from './drawFunctions'
-// import setClock from './Clock';
-import degrees_to_radians from './helpers';
+import * as draw from './drawFunctions'
 
 const dynamicDrawing = (canvas, Clock, props) => {
 
@@ -14,34 +11,15 @@ const dynamicDrawing = (canvas, Clock, props) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   
+
     // INITAL GRAPHICS
-    const rotateHand = (context, rotationCircle, rScaleFactor, timeRatio) => {
 
-        const railRadius = rotationCircle.r * rScaleFactor;
-        const halfCircle = degrees_to_radians(180);
-        const angleDiv = degrees_to_radians(-360 * timeRatio);
-        const angle = halfCircle + angleDiv;
-        const handLength = props.clockCircle.r * rScaleFactor;
-          //The point (0,r) ends up at x=rsinθ, y=rcosθ.
-          let positionX = railRadius * Math.sin(angle);
-          let positionY = railRadius * Math.cos(angle);
-      
-          context.beginPath();
-          context.moveTo(props.clockCircle.x, props.clockCircle.y);
-          context.lineTo(props.clockCircle.x + positionX, props.clockCircle.y + positionY);
-          ctx.strokeStyle = 'red'
-          context.stroke();
-          
-      
-      }
+    draw.infoRect(ctx, props.clockCircle, 0.3, 0.1, false, Clock.date);
 
-    //   ctx.font = `50px Impact`;
-    //   ctx.fillStyle = 'red';
-    //   ctx.fillText(Clock.secondRatio, 300, 300);
+    draw.rotateHand(ctx, props.clockCircle, 0.85, Clock.secondRatio, draw.handSeconds);
+    draw.rotateHand(ctx, props.clockCircle, 0.65, Clock.minuteRatio, draw.handMinutes);
+    draw.rotateHand(ctx, props.clockCircle, 0.5, Clock.hourRatio, draw.handHours);
 
-    rotateHand(ctx, props.clockCircle, 0.5, Clock.secondRatio);
-    
-    // Clock >> SETINTEVAL >> RADIAL MOVE
  
 }
 
