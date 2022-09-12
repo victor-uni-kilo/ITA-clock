@@ -7,20 +7,17 @@ const dynamicDrawing = (canvas, Clock, props) => {
     canvas.height = canvasFrame.height;
 
     const ctx = canvas.getContext('2d');
-    console.log("HELLO AGAIN");
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-
     // INITAL GRAPHICS
-
-    draw.infoRect(ctx, props.clockCircle, 0.3, 0.1, false, Clock.date);
+    draw.displayRect(ctx, props.clockCircle, 0.3, 0.1, Clock.date);
 
     draw.rotateHand(ctx, props.clockCircle, 0.85, Clock.secondRatio, draw.handSeconds);
     draw.rotateHand(ctx, props.clockCircle, 0.65, Clock.minuteRatio, draw.handMinutes);
     draw.rotateHand(ctx, props.clockCircle, 0.5, Clock.hourRatio, draw.handHours);
 
- 
+    // window.requestAnimationFrame(dynamicDrawing(canvas, Clock, props));
 }
 
 export default dynamicDrawing;

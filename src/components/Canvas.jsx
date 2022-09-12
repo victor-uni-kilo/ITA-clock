@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import styles from './Canvas.module.scss';
-import drawing from "../drawing/mainDraw";
+import staticDrawing from "../drawing/staticDraw";
 import dynamicDrawing from "../drawing/dynamicDraw";
+import { useWindowSize } from "../hooks/windowResize";
 
 const Canvas = () => {
   
@@ -11,7 +12,6 @@ const Canvas = () => {
   const setClock = () => {
     const currentDate = new Date();
     const splitDate = currentDate.toString().split(" ");
-    const dayInWeek = splitDate[0].toUpperCase();
     const day = splitDate[2];
    
 
@@ -49,26 +49,34 @@ const Canvas = () => {
       this.minuteRatio = (this.secondRatio + currentDate.getMinutes()) / 60;
       this.hourRatio = (this.minuteRatio + currentDate.getHours()) / 12;
       this.date = date;
-      this.dayInWeek = dayInWeek;
     }
 
     return new Clock();
   }
 
+  
+  const windowSize = useWindowSize();
+
   useEffect(() => {
     const staticCanvas = staticCanvasRef.current;
     const dynamicCanvas = dynamicCanvasRef.current;
 
-    let staticCanvasProps = drawing(staticCanvas);
+    let staticCanvasProps = staticDrawing(staticCanvas);
+    //initialize dynamicDrawing
+    dynamicDrawing(dynamicCanvas, setClock(), staticCanvasProps);
 
-    setInterval(() => {
-      console.log(setClock());
+    const intervalID = setInterval(() => {
       dynamicDrawing(dynamicCanvas, setClock(), staticCanvasProps);
     }, 1000);
   
+    return ( () => {clearInterval(intervalID)});
+    
+    // OVO NE MOZE :( :(
+    // requestAnimationFrame(() => dynamicDrawing(dynamicCanvas, setClock(), staticCanvasProps));
 
-  }, [])
-  
+  }, [windowSize]);
+
+
 
   return (
     <div className={styles.canvasWrapper}>

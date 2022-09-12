@@ -1,15 +1,33 @@
-export const Circle = function (props) {
-    this.x = props.x 
-    this.y = props.y 
-    this.r = props.r ? props.r : this.y;
+export default class Circle {
+  constructor(x, y, r) {
+    this.x = x 
+    this.y = y 
+    this.r = r ? r : this.y;
   }
 
-export const Rect = function (ref, wFactor, hFactor, flip) {
-  this.width = ref.r * wFactor;
-  this.height = ref.r * hFactor;
-  if (flip) {
-    this.x = ref.x - ref.r / 2 - this.width / 2;
+  draw (context, fill, strokeWidth, stroke) {
+    context.beginPath();
+    context.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+
+    if (fill) {
+      context.fillStyle = fill;
+      context.fill();
+    }
+
+    if (strokeWidth) {
+      context.lineWidth = strokeWidth;
+    } 
+
+    if (stroke) {
+      context.strokeStyle = stroke;
+      context.stroke();
+    } 
   }
-  this.x = ref.x + ref.r / 2 - this.width / 2;
-  this.y = ref.y - this.height / 2
+
+  getRelativeLineWeight (lineWeightFactor) {
+    // NOTE: 200 is a magic number
+    return this.r / 200 * lineWeightFactor;
+
+  }
 }
+
